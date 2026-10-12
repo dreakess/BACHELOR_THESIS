@@ -1,0 +1,178 @@
+
+
+// maze example (POMDP)
+// slightly extends that presented in
+// Littman, Cassandra and Kaelbling
+// Learning policies for partially observable environments: Scaling up  
+// Technical Report CS, Brown University
+// gxn 29/01/16
+
+// state space (value of variable "s")
+
+//  0  1  2  3  4
+//  5     6     7
+
+
+
+
+// 6 is the target
+
+pomdp
+
+// can observe the walls and target
+observables
+	o
+endobservables
+// o=0 - observation in initial state
+// o=1 - west and north walls (s0) {giallo}
+// o=2 - north and south walls (s1 and s3) {grigio}
+// o=3 - north wall (s2) {rosso}
+// o=4 - east and north way (s4) {arancione}
+// o=5 - east, west and south walls (s5, s7) {blu}
+// o=6 - the target (s6, s5) {verde}
+
+const double rew = 10; 
+
+module maze
+
+	s : [0..15] init 0;
+	o : [0..10];
+	
+	
+	// initialisation
+	// [] s=-1 -> (s'=0) & (o'=0); 
+
+	
+	// moving around the maze
+	
+    // o = 0
+
+	[east] s=0 -> 9/10 : (s'=1) & (o'=1) + 1/10 : (s'=0);
+	[west] s=0 -> (s'=0);
+	[north] s=0 -> (s'=0);
+	[south] s=0 -> 8/10 :(s'=5) & (o'=3) + 2/10 : (s'=0);
+
+    // o = 1
+
+	[east] s=1 -> 8/10 : (s'=2) & (o'=2) + 2/10 : (s'=1);
+	[west] s=1 -> 4/10 : (s'=0) & (o'=0) + 6/10 : (s'=1);
+	[north] s=1 -> (s'=1);
+	[south] s=1 -> (s'=1);
+
+    // o = 2
+
+	[east] s=2 -> 8/10 : (s'=3) & (o'=1) + 2/10 : (s' =2);
+	[west] s=2 -> 8/10 : (s'=1) & (o'=1) + 2/10 : (s' =2);
+	[north] s=2 -> (s'=2);
+	[south] s=2 -> 9/10 : (s'=6) & (o'=7) + 1/10 : (s'=2);
+
+    // o = 1
+
+	[east] s=3 -> 7/10 : (s'=4) & (o'=10) + 3/10 : (s'=3);
+	[west] s=3 -> 6/10 : (s'=2) & (o'=2) + 4/10 : (s'=3);
+	[north] s=3 -> (s'=3);
+	[south] s=3 -> (s'=3);
+
+    // o = 10
+
+	[east] s=4 -> (s'=4);
+	[west] s=4 -> 9/10 : (s'=3) & (o'=1) + 1/10 : (s'=4);
+	[north] s=4 -> (s'=4);
+	[south] s=4 -> 5/10 : (s'=7) & (o'=3) + 5/10 : (s'=4);
+
+    // o = 3
+
+	[east] s=5 -> (s'=5);
+	[west] s=5 -> (s'=5);
+	[north] s=5 -> 9/10 : (s'=0) & (o'=0) + 1/10 : (s'=5);
+	[south] s=5 -> 8/10 :(s'=8) & (o'=8) + 2/10 :(s'=5);
+
+    // o = 5
+
+    [east] s=8 -> 7/10 : (s'=10) & (o'=1) + 3/10 : (s'=8);
+	[west] s=8 -> (s'=8);
+	[north] s=8 -> 5/10 : (s'=5) & (o'=3) + 5/10 : (s'=5);
+	[south] s=8 -> 8/10 : (s'=12) & (o'=6) + 2/10 : (s'=5);
+
+    // o = 1
+
+    [east] s=9 -> 7/10 : (s'=10) & (o'=9) + 3/10 : (s'=8);
+	[west] s=9 -> 7/10 : (s'=8) & (o'=5) + 3/10 : (s'=9);
+	[north] s=9 -> (s'=9);
+	[south] s=9 -> (s'=9);
+
+    // o = 9
+
+    [east] s=10 -> (s'=10);
+	[west] s=10 -> 9/10 : (s'=9) & (o'=1) + 1/10 : (s'=10);
+	[north] s=10 -> 9/10 : (s'=6) & (o'=7) + 1/10 : (s'=10);
+	[south] s=10 -> 6/10 : (s'=13) & (o'=4) + 4/10 : (s'=10);
+
+    // o = 3
+
+    [east] s=11 -> (s'=11);
+	[west] s=11 -> (s'=11);
+	[north] s=11 -> 9/10 : (s'=7) & (o'=7) + 1/10 : (s'=10);
+	[south] s=11 -> 6/10 : (s'=13) & (o'=4) + 4/10 : (s'=10);
+
+    // o = 3
+
+	[east] s=7 -> (s'=7); 
+	[west] s=7 -> (s'=7);
+	[north] s=7 -> 9/10 : (s'=4) & (o'=10) + 1/10 : (s'=7);
+	[south] s=7 -> 7/10 : (s'=15) & (o'=7) + 3/10 : (s'=7);
+
+    // o = 6
+
+	[east] s=12 -> (s'=12); 
+	[west] s=12 -> (s'=12);
+	[north] s=12 -> 9/10 : (s'=8) & (o'=5) + 1/10 : (s'=12);
+	[south] s=12 -> (s'=12);
+
+    // o = 4
+
+	[east] s=13 -> (s'=12); 
+	[west] s=13 -> 5/10 : (s'=14) & (o'=1) + 5/10 : (s'=12);
+	[north] s=13 -> 9/10 : (s'=10) & (o'=9) + 1/10 : (s'=12);
+	[south] s=13 -> (s'=13);
+
+    // o = 1
+
+	[east] s=14 -> 5/10 : (s'=13) & (o'=4) + 5/10 : (s'=14);
+	[west] s=14 -> 5/10 : (s'=15) & (o'=7) + 5/10 : (s'=13);
+	[north] s=14 -> (s'=14);
+	[south] s=14 -> (s'=14);
+
+	// loop when we reach the target
+	//[done] s=6 -> true;
+	//[done] s=7 -> true; 
+
+endmodule
+
+// reward structure (number of steps to reach the target)
+rewards "step"
+
+	[east] true : 1;
+	[west] true : 1;
+	[north] true : 1;
+	[south] true : 1;
+
+endrewards
+
+rewards "power"
+
+	[east] true : -1;
+	[west] true : 1;
+	[north] true : 1;
+	[south] true : 1;
+
+endrewards
+
+
+
+
+// target observation
+label "goal" = o=7;
+label "bad" = o=3;
+
+

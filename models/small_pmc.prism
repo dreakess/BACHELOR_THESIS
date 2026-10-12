@@ -1,0 +1,21 @@
+dtmc
+
+
+// params
+const double x;
+const double y;
+
+module main
+
+    s : [0..2] init 0;
+    // 0 inital
+    // 1 
+    // 2 accepting
+
+    [] (s = 0) -> x : (s' = 1) + 1-x : (s' = 0);
+    
+    [] (s = 1) -> y : (s' = 1) + 1-y : (s' = 2);
+
+    [] (s = 2) -> true;
+
+endmodule
